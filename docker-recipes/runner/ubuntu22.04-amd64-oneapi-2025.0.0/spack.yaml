@@ -6,13 +6,12 @@ spack:
       root: $BOOTSTRAP_DIR/install
 
   concretizer:
-    reuse: false
+    reuse: true
     unify: when_possible
 
   packages:
     all:
-      compiler: [gcc]
-      target: [x86_64]
+      require: "%gcc target=x86_64"
 
   specs:
   - ccache
@@ -38,3 +37,4 @@ spack:
       modules: []
       environment: {}
       extra_rpaths: []
+

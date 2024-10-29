@@ -96,13 +96,13 @@ FROM base as complete
 
 RUN export S=/tmp/spack \
  && git clone https://github.com/spack/spack $S \
- && git -C $S checkout b5b5130bedcf5a5165cfef2e4e3a30dc1ac0f7ef \
+ && git -C $S checkout 9ba7af404a14e84eec8f79567a6232c06a3c8d69 \
  && . $S/share/spack/setup-env.sh \
  && export SPACK_DISABLE_LOCAL_CONFIG=1 \
  && spack config add 'config:build_stage:$spack/build_stage' \
  && spack config add "config:db_lock_timeout:120" \
  && spack config add "config:connect_timeout:60" \
- && spack mirror add bootstrap https://cache.e4s.io/spack-bootstrap \
+ && spack mirror add bootstrap https://cache.e4s.io/spack-universal-bootstrap/glibc2.17-libcrypt1 \
  && spack buildcache keys -it \
  && spack -e . concretize -f | tee concretize.log \
  && spack -e . install --cache-only \ 
