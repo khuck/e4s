@@ -53,7 +53,7 @@ RUN locale-gen en_US.UTF-8 \
 
 RUN python -m pip install --upgrade pip setuptools wheel \
  && python -m pip install gnureadline pyyaml pytz minio requests clingo \
- && python -m pip install boto3==1.20.35 botocore==1.23.42 \
+ && python -m pip install boto3  botocore \
  && rm -rf ~/.cache
 
 ENV BOOTSTRAP_DIR=/opt/bootstrap
@@ -67,7 +67,7 @@ FROM base as complete
 
 RUN export S=/tmp/spack \
  && git clone https://github.com/spack/spack $S \
- && (cd $S && git checkout b8590fbd057621c9b71c5b274b21e1802d52bc45) \
+ && (cd $S && git checkout 9ba7af404a14e84eec8f79567a6232c06a3c8d69) \
  && . $S/share/spack/setup-env.sh \
  && export SPACK_DISABLE_LOCAL_CONFIG=1 \
  && spack config add 'config:build_stage:$spack/build_stage' \

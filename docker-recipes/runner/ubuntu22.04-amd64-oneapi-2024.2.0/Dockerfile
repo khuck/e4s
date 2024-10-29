@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as base
+FROM ubuntu:22.04 AS base
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG ONEAPI_VERSION=2024.2
@@ -92,11 +92,11 @@ COPY /spack.yaml /spack.yaml.pre
 RUN envsubst < spack.yaml.pre > spack.yaml \
  && rm spack.yaml.pre
 
-FROM base as complete
+FROM base AS complete
 
 RUN export S=/tmp/spack \
  && git clone https://github.com/spack/spack $S \
- && git -C $S checkout b5b5130bedcf5a5165cfef2e4e3a30dc1ac0f7ef \
+ && git -C $S checkout f88ca8cc1f10a08c1200f5988700b6e63b1e5e0e \
  && . $S/share/spack/setup-env.sh \
  && export SPACK_DISABLE_LOCAL_CONFIG=1 \
  && spack config add 'config:build_stage:$spack/build_stage' \
@@ -124,7 +124,7 @@ RUN echo export PATH=$BOOTSTRAP_DIR/view/bin:'${PATH}' >> /etc/bash.bashrc \
  && echo module load mpi >> /etc/bash.bashrc
 
 ENV PATH=/opt/intel/oneapi/compiler/${ONEAPI_VERSION}/bin:/opt/intel/oneapi/mpi/2021.13/bin:$BOOTSTRAP_DIR/view/bin:$PATH
-ENV LD_LIBRARY_PATH=/opt/intel/oneapi/compiler/${ONEAPI_VERSION}/lib:/opt/intel/oneapi/mpi/2021.13/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/opt/intel/oneapi/compiler/${ONEAPI_VERSION}/lib:/opt/intel/oneapi/mpi/2021.13/lib
 
 RUN echo /opt/intel/oneapi/compiler/${ONEAPI_VERSION}/lib >> /etc/ld.so.conf.d/oneapi.conf \
  && echo /opt/intel/oneapi/mpi/2021.13/lib >> /etc/ld.so.conf.d/oneapi.conf \
