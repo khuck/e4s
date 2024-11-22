@@ -9,13 +9,17 @@ RUN yum update -y \
     git \
     patch \
     python3 \
-    vim
+    vim \
+    gettext
 
 COPY CentOS-SCL.repo /etc/yum.repos.d/CentOS-SCL.repo
 
 RUN yum install -y centos-release-scl \
  && rm -f rm /etc/yum.repos.d/CentOS-SCLo*.repo \
  && yum install -y devtoolset-10
+
+RUN rm -rf rm -f /lib64/libcrypt.so \
+ && ldconfig -v
 
 RUN python3 -m pip install boto3
 
@@ -28,7 +32,7 @@ RUN envsubst < spack.yaml.pre > spack.yaml \
 
 RUN export S=/tmp/spack \
  && git clone https://github.com/spack/spack $S \
- && git -C $S checkout 4f9aa6004b4324bc819fcb25f4ed9acaa6cf11bc \
+ && (cd $S && git checkout 4f9aa6004b4324bc819fcb25f4ed9acaa6cf11bc) \
  && . $S/share/spack/setup-env.sh \
  && export SPACK_DISABLE_LOCAL_CONFIG=1 \
  && spack config add 'config:build_stage:$spack/build_stage' \
@@ -48,6 +52,7 @@ RUN cd /tmp \
  && ./aws/install \
  && rm -rf awscliv2.zip aws
 
-RUN echo source scl_source enable devtoolset-10 >> /etc/bashrc
+RUN echo source scl_source enable devtoolset-10 >> /etc/bashrc \
+ && echo export PATH=$BOOTSTRAP_DIR/view/bin:'${PATH}' >> /etc/bashrc
 
 ENV PATH=$BOOTSTRAP_DIR/view/bin:$PATH
